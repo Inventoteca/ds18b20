@@ -46,7 +46,7 @@ static void mgos_ds18b20_read_cb(void *arg) {
     mgos_ds18b20_reading = reading;
   }
   mgos_ds18b20_conn = true;
-  LOG(LL_DEBUG, ("OneWire: DS18B20 Reading %f", mgos_ds18b20_reading));
+  LOG(LL_DEBUG, ("Temperature: Reading %f", mgos_ds18b20_reading));
 }
 
 static void mgos_ds18b20_timer_cb(void *arg) {
@@ -55,7 +55,7 @@ static void mgos_ds18b20_timer_cb(void *arg) {
   if (mgos_onewire_next(ow, mgos_ds18b20_addr, 0)) {
     if (mgos_onewire_crc8(mgos_ds18b20_addr, 7) == mgos_ds18b20_addr[7]) {
       LOG(LL_DEBUG,
-          ("OneWire: DS18B20 Found ADDRESS: %x%x%x%x%x%x%x%x",
+          ("Sensor: DS18B20 Found ADDRESS: %x%x%x%x%x%x%x%x",
            mgos_ds18b20_addr[0], mgos_ds18b20_addr[1], mgos_ds18b20_addr[2],
            mgos_ds18b20_addr[3], mgos_ds18b20_addr[4], mgos_ds18b20_addr[5],
            mgos_ds18b20_addr[6], mgos_ds18b20_addr[7]));
@@ -64,12 +64,12 @@ static void mgos_ds18b20_timer_cb(void *arg) {
       mgos_onewire_write(ow, 0x44);
       mgos_set_timer(750, false, mgos_ds18b20_read_cb, NULL);
     } else {
-      LOG(LL_ERROR, ("OneWire: CRC Mismatch"));
+      LOG(LL_ERROR, ("Sensor: CRC Mismatch"));
       mgos_ds18b20_conn = false;
     }
   } else {
     mgos_onewire_reset(ow);
-    LOG(LL_DEBUG, ("OneWire: No DS18B20 Found"));
+    LOG(LL_DEBUG, ("Sensor: No DS18B20 Found"));
     mgos_ds18b20_conn = false;
   }
 }
